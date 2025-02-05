@@ -2,6 +2,7 @@ import {Body, Get, JsonController, Post, QueryParam, QueryParams} from 'routing-
 import {Inject, Service} from "typedi";
 import {VideoRecordService} from "../service/VideoRecordService";
 import {VideoTypeEnum} from "@common/interface/entity/video";
+import VideoRecord from "../entity/video/videoRecord";
 
 @Service()
 @JsonController('/video')
@@ -13,6 +14,11 @@ export class VideoRecordController {
   @Get('/list')
   async list (@QueryParams() query: string): Promise<any> {
     return await this.videoRecordService.getLocalVideoList()
+  }
+
+  @Post('/find')
+  async findOneVideo (@Body() body: VideoRecord): Promise<any> {
+    return await this.videoRecordService.findOneVideoRecord(body)
   }
 
   @Post('/import')
@@ -29,13 +35,4 @@ export class VideoRecordController {
   async addTVRecord(@QueryParam('title',{required: true}) title: string): Promise<any> {
     return await this.videoRecordService.addTVRecord(title)
   }
-
-  @Post('/post')
-  async post (@Body() body: any): Promise<any> {
-    console.log(body, '请求的body参数')
-    return {}
-  }
-
-
-
 }

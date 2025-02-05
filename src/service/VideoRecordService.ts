@@ -23,6 +23,13 @@ export class VideoRecordService {
         }
     }
 
+    public async findOneVideoRecord (filter: Partial<VideoRecord>){
+        return VideoRecord.find({
+            ...filter,
+            take: 1,
+        })
+    }
+
     public async addLocalVideoRecordForTv (VideoFolderPath: string): Promise<any> {
         return await VideoRecord.insert({
             title: '2.5次元的诱惑',
