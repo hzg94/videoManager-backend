@@ -10,6 +10,7 @@ import AppDataSource from './entity'
 import {Container} from "typedi";
 import {ConfigService} from "./service/ConfigService";
 import {FileController} from "./controllers/FileController";
+import logger from "@common/logger";
 
 
 (async () => {
@@ -36,7 +37,9 @@ import {FileController} from "./controllers/FileController";
 
     app.listen(config.port)
 
-    console.log('Service Started Successfully')
+    logger.info('Service Started Successfully')
+
+    logger.info("App listening at: http://localhost:"+ config.port)
 
     await AppDataSource.initialize()
 

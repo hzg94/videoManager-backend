@@ -24,10 +24,10 @@ export class VideoRecordService {
     }
 
     public async findOneVideoRecord (filter: Partial<VideoRecord>){
-        return VideoRecord.find({
+        return (await VideoRecord.find({
             ...filter,
             take: 1,
-        })
+        }))[0]
     }
 
     public async addLocalVideoRecordForTv (VideoFolderPath: string): Promise<any> {
