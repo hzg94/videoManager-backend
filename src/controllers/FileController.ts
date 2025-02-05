@@ -21,6 +21,12 @@ export class FileController {
         }
     }
 
+    @Get('/remove')
+    async remove(@QueryParam('path',{required: true}) path: string){
+        await this.fileService.removeDir(path)
+        return BaseResponse.Success(null)
+    }
+
     @Get("/getPic")
     @Header('content-type', 'image/jpeg')
     async getPic(@QueryParam('path',{required: true}) path: string){

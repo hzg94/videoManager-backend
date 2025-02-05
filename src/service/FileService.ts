@@ -5,6 +5,11 @@ import * as path from "node:path";
 
 @Service()
 export class FileService {
+
+    public async removeDir(filePath: string){
+        await fs.rm(filePath)
+    }
+
     public async getFileList(filePath: string): Promise<FileType[]> {
         const list = await fs.readdir(filePath)
 
