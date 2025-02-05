@@ -26,4 +26,5 @@ export class FileController {
     async getPic(@QueryParam('path',{required: true}) path: string){
         return await this.fileService.getPic(path)
     }
+
 }

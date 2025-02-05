@@ -9,8 +9,6 @@ import {UseLogWare} from './middleware'
 import AppDataSource from './entity'
 import {Container} from "typedi";
 import {ConfigService} from "./service/ConfigService";
-import {PluginsService} from "./service/PluginsService";
-import {PluginsController} from "./controllers/pluginsController";
 import {FileController} from "./controllers/FileController";
 
 
@@ -31,7 +29,7 @@ import {FileController} from "./controllers/FileController";
     useContainer(Container)
 
     useKoaServer(app, {
-        controllers: [VideoRecordController, PluginsController,FileController],
+        controllers: [VideoRecordController,FileController],
         middlewares: [UseLogWare],
         routePrefix: '/api'
     })
@@ -42,6 +40,5 @@ import {FileController} from "./controllers/FileController";
 
     await AppDataSource.initialize()
 
-    await PluginsService.loadPlugins(config.loadPlugins)
 })()
 

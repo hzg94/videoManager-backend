@@ -1,5 +1,5 @@
 import {DataSource} from 'typeorm'
-import VideoRecord from "./videoRecord";
+import VideoRecord from "./video/videoRecord";
 
 
 const AppDataSource = new DataSource({

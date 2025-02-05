@@ -13,3 +13,7 @@ react + typescript + antd
 
 ## Start:
 bun run start
+
+
+# 结构
+视频库

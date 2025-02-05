@@ -43,3 +43,9 @@ export type VideoData = {
     link: VideoLinkType[]
     metaData: MetaDataType
 }
+
+export interface MetaDataResult {
+    title: string
+
+}
+

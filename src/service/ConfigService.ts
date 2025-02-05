@@ -45,12 +45,4 @@ export class ConfigService {
     }
 
 
-    async addLocalPlugins(pluginsPath: string[]) {
-        logger.debug("addPlugins ....")
-
-        this.coreConfig.loadPlugins = [...this.coreConfig.loadPlugins, ...pluginsPath]
-
-        await WriteJsonFile(this.coreConfigPath, this.coreConfig)
-    }
-
 }

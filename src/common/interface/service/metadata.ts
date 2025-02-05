@@ -1,4 +1,5 @@
+import {MetaDataResult, VideoTypeEnum} from "@common/interface/entity/video";
 
-export interface MetadataService {
-
+export interface MetaDataService {
+    getMetaData(title: string, type: VideoTypeEnum): Promise<MetaDataResult>;
 }

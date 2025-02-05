@@ -1,17 +1,12 @@
-import {Inject, Service} from "typedi";
-import VideoRecord from "../entity/videoRecord";
+import {Service} from "typedi";
+import VideoRecord from "../entity/video/videoRecord";
 import {VideoTypeEnum} from "@common/interface/entity/video";
 import {BaseResponse} from "@common/resoponse";
-import {PluginsService} from "./PluginsService";
-import {AbilityType} from "@common/interface/service/plugins";
-import {MetaDataAbility} from "@common/interface/ability/abilityInterface";
 
 
 @Service()
 export class VideoRecordService {
 
-    @Inject()
-    pluginsService: PluginsService
 
     public async getLocalVideoList () {
         return BaseResponse.Success(await VideoRecord.find())
@@ -19,11 +14,13 @@ export class VideoRecordService {
 
 
     public async addTVRecord (title: string){
-        let ability = this.pluginsService.getAbility<MetaDataAbility>(AbilityType.MetaInfo);
-        ability.forEach(x => {
 
-            console.log(x.getMetaData(title, VideoTypeEnum.Tv))
-        })
+    }
+
+    public async addVideoRecord(title: string, type: VideoTypeEnum){
+        return {
+
+        }
     }
 
     public async addLocalVideoRecordForTv (VideoFolderPath: string): Promise<any> {
@@ -38,13 +35,5 @@ export class VideoRecordService {
             link:[],
             metaData: {}
         })
-    }
-
-
-
-    // parse
-    public async parseTitle(fileName: string) {
-
-        return ""
     }
 }
