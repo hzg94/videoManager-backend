@@ -3,7 +3,7 @@
 视频库管理工具 未完成
 
 ### 前端:
-[videoManager-backend](https://github.com/yangyang-yangyang/videoManager-backend)
+[videoManager-backend](https://github.com/hzg94/videoManager)
 
 ## 介绍:
 1. 文件管理
