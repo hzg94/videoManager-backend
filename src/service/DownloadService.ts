@@ -1,7 +1,8 @@
 import {Service} from "typedi";
 import {DownloadTask} from "@common/interface/service/download";
 
-
+// TODO: 未完成
+// bt or other
 @Service()
 export class DownloadService {
 
