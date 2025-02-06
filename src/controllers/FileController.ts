@@ -1,4 +1,4 @@
-import {Get, Header, JsonController, Param, QueryParam} from "routing-controllers";
+import {Get, Header, JsonController, QueryParam} from "routing-controllers";
 import {Inject, Service} from "typedi";
 import {FileService} from "../service/FileService";
 import {BaseResponse} from "@common/resoponse";
@@ -12,24 +12,29 @@ export class FileController {
     fileService: FileService
 
     @Get('/ls')
-    async list(@QueryParam('path',{required: true}) path: string) {
-        try{
+    async list(@QueryParam('path', {required: true}) path: string) {
+        try {
             const data = await this.fileService.getFileList(path)
             return BaseResponse.Success(data)
-        }catch (error){
+        } catch (error) {
             return BaseResponse.Failed(error.message, 500)
         }
     }
 
     @Get('/remove')
-    async remove(@QueryParam('path',{required: true}) path: string){
-        await this.fileService.removeDir(path)
+    async remove(@QueryParam('path', {required: true}) path: string) {
+        try {
+            await this.fileService.removeDir(path)
+        } catch (error) {
+            console.log(error)
+            return BaseResponse.Failed(error.message, 400)
+        }
         return BaseResponse.Success(null)
     }
 
     @Get("/getPic")
     @Header('content-type', 'image/jpeg')
-    async getPic(@QueryParam('path',{required: true}) path: string){
+    async getPic(@QueryParam('path', {required: true}) path: string) {
         return await this.fileService.getPic(path)
     }
 

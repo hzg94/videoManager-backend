@@ -28,7 +28,7 @@ export class VideoRecordController {
 
   @Get('/test')
   async test (): Promise<any> {
-    return await this.videoRecordService.addVideoRecord('2.5次元的诱惑', VideoTypeEnum.Tv);
+    return await this.videoRecordService.addVideoRecord('',VideoTypeEnum.Tv);
   }
 
   @Get("/AddTVRecord")

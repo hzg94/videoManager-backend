@@ -1,11 +1,15 @@
-import {Service} from "typedi";
+import {Inject, Service} from "typedi";
 import VideoRecord from "../entity/video/videoRecord";
 import {VideoTypeEnum} from "@common/interface/entity/video";
 import {BaseResponse} from "@common/resoponse";
+import {TmdbService} from "./TmdbService";
 
 
 @Service()
 export class VideoRecordService {
+
+    @Inject()
+    tmdbService: TmdbService
 
 
     public async getLocalVideoList () {
@@ -18,9 +22,8 @@ export class VideoRecordService {
     }
 
     public async addVideoRecord(title: string, type: VideoTypeEnum){
-        return {
+        return this.tmdbService.getTmdbData('2.5次元的诱惑')
 
-        }
     }
 
     public async findOneVideoRecord (filter: Partial<VideoRecord>){

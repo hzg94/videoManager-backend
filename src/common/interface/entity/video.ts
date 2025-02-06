@@ -21,7 +21,6 @@ export type CreditsType = {
 export type MetaDataType = {
     date: Date
 
-
     // 外部平台id
     imdbId: string
     tvdbId: string
@@ -41,7 +40,39 @@ export type VideoData = {
     credits: CreditsType[]
     path: string
     link: VideoLinkType[]
-    metaData: MetaDataType
+    metaData?: MetaDataType,
+    seasons: SeasonData[]
+}
+
+export type SeasonData = {
+    id: string
+
+    number: string
+
+    title: string
+
+    year: string
+
+    description: string
+    // 总集数
+    total: string
+
+    episodes: EpisodeData[]
+}
+
+export type EpisodeData = {
+    id: string
+    // 集数
+    number: string
+
+    title: string
+
+    description: string
+
+    // 时长 unit 分钟
+    time: number
+
+    backdropPicPath: string
 }
 
 export interface MetaDataResult {

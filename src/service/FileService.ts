@@ -6,8 +6,9 @@ import * as path from "node:path";
 @Service()
 export class FileService {
 
-    public async removeDir(filePath: string){
-        await fs.rm(filePath)
+    public async removeDir(filePath: string) {
+        fs.access(filePath)
+        fs.rm(filePath)
     }
 
     public async getFileList(filePath: string): Promise<FileType[]> {
@@ -27,7 +28,7 @@ export class FileService {
 
     }
 
-    async getPic(filePath: string){
+    async getPic(filePath: string) {
         return await fs.readFile(filePath)
     }
 

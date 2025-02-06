@@ -22,6 +22,14 @@ export class ConfigService {
         return this.coreConfig;
     }
 
+    getConfig(configKey: string) {
+        return this.coreConfig[configKey]
+    }
+
+    getKey(platform: string){
+        return this.coreConfig.key[platform]
+    }
+
     async initConfig<T extends Object>() {
         logger.debug("initConfig ....")
 
@@ -36,7 +44,8 @@ export class ConfigService {
                 renew: false
             },
             loadPlugins: [],
-            pluginsConfig: []
+            pluginsConfig: [],
+            key: {}
         } as CoreConfig<T>
 
         await WriteJsonFile(this.coreConfigPath, initCoreConfig)

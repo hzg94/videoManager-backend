@@ -1,4 +1,4 @@
-export interface CoreConfig<P extends Object> {
+export type CoreConfig <P extends Object, T extends Record<string, any> = {}> =  {
     port: number
 
     session: SessionConfig
@@ -6,7 +6,9 @@ export interface CoreConfig<P extends Object> {
     // 默认加载扩展路径
     loadPlugins: string[]
     pluginsConfig: P[]
-}
+
+    key: Record<string, string>
+} & T
 
 export interface SessionConfig {
     key: string
