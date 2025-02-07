@@ -9,7 +9,7 @@
 1. 文件管理
 
 ## 技术栈:
-react + typescript + antd
+koa + sqlite + typedi + typeorm
 
 ## Start:
 bun run start

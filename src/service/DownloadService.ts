@@ -1,7 +1,7 @@
 import {Service} from "typedi";
 import {DownloadTask} from "@common/interface/service/download";
 
-// TODO: 未完成
+// TODO: 未完成 support qb and aria2 ？
 // bt or other
 @Service()
 export class DownloadService {

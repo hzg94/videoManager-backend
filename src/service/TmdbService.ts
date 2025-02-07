@@ -1,7 +1,7 @@
 import {Container, Service} from "typedi";
 import {ConfigService} from "./ConfigService";
 import MovieDB from "node-themoviedb";
-import {EpisodeData, SeasonData, VideoData, VideoTypeEnum} from "@common/interface/entity/video";
+import {EpisodeData, VideoData, VideoTypeEnum, Seasons} from "@common/interface/entity/video";
 
 
 @Service()
@@ -49,7 +49,7 @@ export class TmdbService {
 
     async getSeasons(id: number){
 
-        let seasonsData:SeasonData[] = []
+        let seasonsData: Seasons[] = []
 
         let DetailRes = (await this.client.tv.getDetails({
             pathParameters: {

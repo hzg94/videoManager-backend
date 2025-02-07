@@ -34,17 +34,20 @@ export type VideoData = {
     id: string
     title: string
     type: VideoTypeEnum
+    // 指向cacheId
     backdropPicPath: string
+    // 指向cacheId
     posterPicPath: string
+
     description: string
     credits: CreditsType[]
     path: string
     link: VideoLinkType[]
     metaData?: MetaDataType,
-    seasons: SeasonData[]
+    seasons: Seasons[]
 }
 
-export type SeasonData = {
+export interface Seasons {
     id: string
 
     number: string
@@ -72,6 +75,7 @@ export type EpisodeData = {
     // 时长 unit 分钟
     time: number
 
+    // 指向cacheId
     backdropPicPath: string
 }
 

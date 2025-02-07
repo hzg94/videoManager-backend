@@ -1,6 +1,5 @@
-import {BaseResponseType} from "@common/interface";
 
-export class BaseResponse<T> implements BaseResponseType<T> {
+export class BaseResponse<T> {
     code: number;
     data: T;
     success: boolean;

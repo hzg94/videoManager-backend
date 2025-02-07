@@ -11,6 +11,11 @@ export class FileService {
         fs.rm(filePath)
     }
 
+    async getDirs(filePath: string){
+        const fileList = await this.getFileList(filePath);
+        return fileList.filter(item => item.isDir)
+    }
+
     public async getFileList(filePath: string): Promise<FileType[]> {
         const list = await fs.readdir(filePath)
 
