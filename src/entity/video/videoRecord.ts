@@ -1,10 +1,11 @@
-import {BaseEntity, Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+import {BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 import type {
     CreditsType, MetaDataType,
     Seasons,
     VideoData, VideoLinkType,
     VideoTypeEnum
 } from "@/common/interface/entity/video";
+import {SeasonsRecord} from "@/entity/video/SeasonsRecord";
 
 
 @Entity('video')
@@ -38,7 +39,7 @@ export default class VideoRecord extends BaseEntity implements VideoData{
     @Column("simple-json")
     metaData: MetaDataType
 
-    @Column("simple-json")
+    @OneToMany(() => SeasonsRecord, (seasons) => seasons)
     seasons: Seasons[];
 
     @Column()

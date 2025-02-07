@@ -8,13 +8,16 @@
     "koa"
   ],
   "scripts": {
-    "start": "bun --watch src/index.ts "
+    "start": "bun --watch src/index.ts ",
+    "test": "bun test/test.ts "
   },
   "dependencies": {
     "@types/koa-mount": "^4.0.5",
     "@types/webpack-node-externals": "^3.0.4",
+    "axios": "^1.7.9",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
+    "crypto": "^1.0.1",
     "dotenv": "^8.2.0",
     "koa": "^2.14.2",
     "koa-body": "^6.0.1",

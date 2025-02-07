@@ -1,5 +1,7 @@
 import {DataSource} from 'typeorm'
 import VideoRecord from "./video/videoRecord";
+import {SeasonsRecord} from "@/entity/video/SeasonsRecord";
+import {EpisodeRecord} from "@/entity/video/EpisodeRecord";
 
 
 const AppDataSource = new DataSource({
@@ -7,7 +9,7 @@ const AppDataSource = new DataSource({
     database: './data/database/data.db',
     synchronize: true,
     logging: false,
-    entities: [VideoRecord],
+    entities: [VideoRecord,SeasonsRecord,EpisodeRecord],
     subscribers: [],
     migrations: []
 })

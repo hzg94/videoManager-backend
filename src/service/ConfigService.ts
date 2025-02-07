@@ -22,7 +22,7 @@ export class ConfigService {
         return this.coreConfig;
     }
 
-    getConfig(configKey: string) {
+    getConfig(configKey: keyof CoreConfig<any>) {
         return this.coreConfig[configKey]
     }
 
@@ -43,6 +43,7 @@ export class ConfigService {
                 rolling: true,
                 renew: false
             },
+            tempDir: './date/tmp',
             loadPlugins: [],
             pluginsConfig: [],
             key: {}

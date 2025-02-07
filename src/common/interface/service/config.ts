@@ -7,6 +7,8 @@ export type CoreConfig <P extends Object, T extends Record<string, any> = {}> = 
     loadPlugins: string[]
     pluginsConfig: P[]
 
+    tempDir: string
+
     key: Record<string, string>
 } & T
 
