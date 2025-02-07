@@ -1,38 +1,57 @@
-import {Inject, Service} from "typedi";
-import * as path from "node:path";
-import fs from "fs";
+import {Container, Service} from "typedi";
 import * as crypto from 'crypto';
 import VideoRecord from "@/entity/video/videoRecord";
 import {EpisodeRecord} from "@/entity/video/EpisodeRecord";
 import {ConfigService} from "@/service/ConfigService";
+import * as path from "node:path";
+import fs from "fs";
+import { ReadStream } from "node:fs";
+import { PassThrough } from "node:stream";
+
 
 @Service()
 export class CacheService {
+    tempDir: string
 
-    @Inject()
-    configService: ConfigService
+    constructor() {
+        const config = Container.get(ConfigService)
+        this.tempDir = config.getConfig('tempDir') as string
+    }
+
+
 
     /**
-     * @param href 网址
+     * @param stream 可读流
      * @return Promise<string> cacheId
      */
-    async saveCache(href: string): Promise<string> {
-        const stream = fs.createReadStream(path.join(__dirname, '1.mp4'));
+    async saveCache(stream: ReadStream): Promise<string> {
+        //数据分发
+        const passThrough1 = new PassThrough();
+        const passThrough2 = new PassThrough();
+        stream.pipe(passThrough1);
+        stream.pipe(passThrough2);
 
         const hash = crypto.createHash('md5');
 
-        return await new Promise<string>((resolve, reject) => {
-            stream.on('data', chunk => {
+        //计算md5
+        const md5 = await new Promise<string>((resolve, reject) => {
+            passThrough1.on('data', chunk => {
                 //@ts-ignore
                 hash.update(chunk, 'utf8');
             });
 
-            stream.on('end', () => {
+            passThrough1.on('end', () => {
                 resolve(hash.digest('hex'))
             });
 
-            stream.on('error', (err) => reject(err))
+            passThrough1.on('error', (err) => reject(err))
         })
+
+        const writeStream = fs.createWriteStream(path.resolve(this.tempDir, md5))
+        //写入文件
+        passThrough2.pipe(writeStream)
+
+        return md5
     }
 
     async deleteCache(cacheId: string) {
@@ -43,7 +62,7 @@ export class CacheService {
      * 查找本地所有缓存
      */
     findCacheForAll(cacheId: string) {
-        const tempDir = this.configService.getConfig('tempDir');
+
 
 
     }

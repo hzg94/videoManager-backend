@@ -1,6 +1,5 @@
 import * as fs from 'fs/promises'
 
-
 export const ReadJsonFile = async <T>(filePath: string): Promise<T | null> => {
     return await new Promise((resolve, reject) => {
         return fs.readFile(filePath).then(x => {

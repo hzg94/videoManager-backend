@@ -47,7 +47,7 @@ export type VideoData = {
     seasons: Seasons[]
 }
 
-export interface Seasons {
+export type Seasons = {
     id: string
 
     number: string

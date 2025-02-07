@@ -9,4 +9,8 @@ export class AiService {
         return title
     }
 
+    TalkOpenAi(title: string) {
+        return "hello"
+    }
+
 }
