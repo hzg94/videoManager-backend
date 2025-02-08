@@ -1,5 +1,4 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import {runtime} from "webpack";
+import axios, {AxiosInstance, AxiosRequestConfig} from 'axios';
 
 // 定义请求配置接口
 interface RequestConfig extends AxiosRequestConfig {

@@ -29,7 +29,7 @@ export class TmdbService {
 
         SeasonRes.episodes.forEach(episode => {
             episodes.push({
-                id: '',
+                id: 0,
                 // 集数
                 number: episode.episode_number + '',
 
@@ -63,7 +63,7 @@ export class TmdbService {
             const season = DetailRes['seasons'][i]
 
             seasonsData.push({
-                id: '',
+                id: 0,
                 number: season['season_number'] + '',
                 title: season['name'],
                 year: season['air_date'],
@@ -87,11 +87,13 @@ export class TmdbService {
 
         let seasonsData = await this.getSeasons(searchRes['id'])
 
+        console.log(searchRes)
+
         return {
             backdropPicPath: "",
             credits: [],
             description: searchRes['overview'],
-            id: "",
+            id: 0,
             link: [
                 {
                     name: 'tmdb',
@@ -100,7 +102,6 @@ export class TmdbService {
             ],
             metaData: {
                 date: searchRes['first_air_date'],
-
                 imdbId: '',
                 tvdbId: '',
                 tmdbId: searchRes['id'] + '',
@@ -109,7 +110,7 @@ export class TmdbService {
             path: "",
             posterPicPath: "",
             seasons: seasonsData,
-            title: searchRes['title'],
+            title: searchRes['name'],
             type: VideoTypeEnum.Tv
         }
 

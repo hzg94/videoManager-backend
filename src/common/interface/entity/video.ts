@@ -31,24 +31,24 @@ export type MetaDataType = {
 
 
 export type VideoData = {
-    id: string
-    title: string
-    type: VideoTypeEnum
-    // 指向cacheId
-    backdropPicPath: string
-    // 指向cacheId
-    posterPicPath: string
+  id: number ;
+  title: string;
+  type: VideoTypeEnum;
+  /** 指向cacheId*/
+  backdropPicPath: string;
+  /**指向cacheId */
+  posterPicPath: string;
 
-    description: string
-    credits: CreditsType[]
-    path: string
-    link: VideoLinkType[]
-    metaData?: MetaDataType,
-    seasons: Seasons[]
-}
+  description: string;
+  credits: CreditsType[];
+  path: string;
+  link: VideoLinkType[];
+  metaData?: MetaDataType;
+  seasons: Seasons[];
+};
 
 export type Seasons = {
-    id: string
+    id: number
 
     number: string
 
@@ -64,7 +64,7 @@ export type Seasons = {
 }
 
 export type EpisodeData = {
-    id: string
+    id: number
     // 集数
     number: string
 
@@ -77,6 +77,7 @@ export type EpisodeData = {
 
     // 指向cacheId
     backdropPicPath: string
+
 }
 
 export interface MetaDataResult {

@@ -1,10 +1,10 @@
-import {Container, Service} from "typedi";
+import {Service} from "typedi";
 import {ConfigService} from "./ConfigService";
 import * as crypto from 'crypto';
 import * as querystring from 'querystring';
-import MovieDB from "node-themoviedb";
 import {Request} from '../common/request';
-import {DobanMovieSearchResponse, DoubanVideoResponse} from "@common/interface/service/videoResponse";
+import {DobanMovieSearchResponse} from "@common/interface/service/videoResponse";
+
 @Service()
 export class DoubanService {
 
@@ -42,12 +42,14 @@ export class DoubanService {
         person_work: '/elessar/work_collections/%s/works',
         imdbid: '/movie/imdb/%s',
     };
+
     private userAgents = [
         'api-client/1 com.douban.frodo/7.22.0.beta9(231) Android/23 product/Mate 40 vendor/HUAWEI model/Mate 40 brand/HUAWEI  rom/android  network/wifi  platform/AndroidPad',
         'api-client/1 com.douban.frodo/7.18.0(230) Android/22 product/MI 9 vendor/Xiaomi model/MI 9 brand/Android  rom/miui6  network/wifi  platform/mobile nd/1',
         'api-client/1 com.douban.frodo/7.1.0(205) Android/29 product/perseus vendor/Xiaomi model/Mi MIX 3  rom/miui6  network/wifi  platform/mobile nd/1',
         'api-client/1 com.douban.frodo/7.3.0(207) Android/22 product/MI 9 vendor/Xiaomi model/MI 9 brand/Android  rom/miui6  network/wifi platform/mobile nd/1',
     ];
+
     private configService: ConfigService
     private request: Request;
     private apiSecretKey = "bf7dddc7c9cfe6f7"
