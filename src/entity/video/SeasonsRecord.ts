@@ -1,12 +1,13 @@
 import type {EpisodeData, Seasons} from "@common/interface/entity/video";
-import {BaseEntity, Entity, OneToMany, PrimaryGeneratedColumn} from "typeorm";
+import {BaseEntity, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 import {EpisodeRecord} from "@/entity/video/EpisodeRecord";
+import VideoRecord from "@/entity/video/videoRecord";
 
 
 @Entity('seasons')
 export class SeasonsRecord extends BaseEntity implements Seasons {
     @PrimaryGeneratedColumn()
-    id: string;
+    id: number;
 
     description: string;
 
@@ -18,6 +19,12 @@ export class SeasonsRecord extends BaseEntity implements Seasons {
 
     year: string;
 
-    @OneToMany(() => EpisodeRecord, episode => episode)
-    episodes: EpisodeData[];
+    @ManyToOne(() => VideoRecord, video => video.seasons)
+    video: VideoRecord[];
+
+    @OneToMany(() => EpisodeRecord, episode => episode.seasons,{
+        cascade: true
+    })
+    @JoinColumn()
+    episodes: EpisodeRecord[];
 }

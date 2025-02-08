@@ -21,6 +21,7 @@ export class CacheService {
 
 
     /**
+     * TODO: bug 无法使用axios流
      * @param stream 可读流
      * @return Promise<string> cacheId
      */
@@ -28,6 +29,7 @@ export class CacheService {
         //数据分发
         const passThrough1 = new PassThrough();
         const passThrough2 = new PassThrough();
+
         stream.pipe(passThrough1);
         stream.pipe(passThrough2);
 
