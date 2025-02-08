@@ -4,7 +4,8 @@ import * as crypto from 'crypto';
 import * as querystring from 'querystring';
 import MovieDB from "node-themoviedb";
 import {Request} from '../common/request';
-import {DobanMovieSearchResponse, DoubanVideoResponse} from "@common/interface/service/videoResponse";
+import {DobanMovieSearchResponse, DoubanVideo, DoubanVideoResponse} from "@common/interface/service/videoResponse";
+import {VideoTypeEnum} from "@common/interface/entity/video";
 @Service()
 export class DoubanService {
 
@@ -56,12 +57,26 @@ export class DoubanService {
     private baseUrl = "https://frodo.douban.com/api/v2"
     private apiUrl = "https://api.douban.com/v2"
 
+
+
     constructor() {
         // this.configService = Container.get(ConfigService)
         this.request = new Request({
             baseURL: "https://www.doubanapi.com/v2"
         })
     }
+
+    public toDoubanVideo(obj:any):DoubanVideo{
+        let values:string[] = Object.values(VideoTypeEnum);
+        let tmp_type=VideoTypeEnum.Unknown
+
+        if (values.includes(obj.target_type)){
+            tmp_type = obj.target_type as VideoTypeEnum;
+        }
+
+        return new DoubanVideo(obj.target.title,obj.target_id,tmp_type,obj.target.cover_url,parseInt(obj.target.year),obj.target.card_subtitle)
+    }
+
     private sign(url: string, ts: string, method = 'GET'): string {
         const urlPath = new URL(url).pathname;
         const rawSign = `${method.toUpperCase()}&${encodeURIComponent(urlPath)}&${ts}`;

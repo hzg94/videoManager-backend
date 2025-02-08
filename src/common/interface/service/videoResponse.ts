@@ -58,15 +58,5 @@ export class DoubanVideoResponse {
         null_rating_reason: string,
     }
     target_type: string
-    public toDoubanVideo():DoubanVideo{
-        console.log("?")
-        let values:string[] = Object.values(VideoTypeEnum);
-        let tmp_type=VideoTypeEnum.Unknown
 
-        if (values.includes(this.target_type)){
-            tmp_type = this.target_type as VideoTypeEnum;
-        }
-
-        return new DoubanVideo(this.target.title,this.target_id,tmp_type,this.target.cover_url,parseInt(this.target.year),this.target.card_subtitle)
-    }
 }
