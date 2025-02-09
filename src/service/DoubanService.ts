@@ -127,7 +127,7 @@ export class DoubanService {
     //     return this.invoke(this.urls.search, 'GET', { q: keyword, start, count, _ts: ts });
     // }
 
-    public async movieSearch(keyword: string, start = 0, count = 2, ts?: string): Promise<DobanMovieSearchResponse> {
+    public async movieSearch(keyword: string, start = 0, count = 1, ts?: string): Promise<DobanMovieSearchResponse> {
         return this.invoke(this.urls.movie_search, 'GET', { q: keyword, start, count, _ts: ts });
     }
 
@@ -156,6 +156,7 @@ export class DoubanService {
         let tmp:DoubanVideo[] = []
         await this.movieSearch(keyword).then((res)=>{
             for (const item of res.items) {
+
                 let doubanVideo = this.toDoubanVideo(item);
                 tmp.push(doubanVideo);
             }
@@ -166,6 +167,7 @@ export class DoubanService {
         let result:VideoData[] = []
         for (let video of tmp) {
             let detail =await this.searchDetails(video)
+            console.log(detail)
             let obj:VideoData = {
                 backdropPicPath: "",
                 credits: [],
@@ -177,14 +179,13 @@ export class DoubanService {
                 }
             ],
                 metaData: {
-                // date: searchRes['first_air_date'],
                 imdbId: '',
                     tvdbId: '',
                     tmdbId: '',
                     doubanId: detail.id,
             },
                 path: "",
-                    posterPicPath: "",
+                posterPicPath: "",
                 seasons: [],
                 title: detail.title,
                 type: video.video_type
