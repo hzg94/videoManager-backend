@@ -1,11 +1,11 @@
-import {Container, Service} from "typedi";
+import {Service} from "typedi";
 import {ConfigService} from "./ConfigService";
 import * as crypto from 'crypto';
 import * as querystring from 'querystring';
-import MovieDB from "node-themoviedb";
 import {Request} from '../common/request';
-import {DobanMovieSearchResponse, DoubanVideo, DoubanVideoResponse} from "@common/interface/service/videoResponse";
-import {VideoTypeEnum} from "@common/interface/entity/video";
+import {DobanMovieSearchResponse, DoubanVideo} from "@common/interface/service/videoResponse";
+import {VideoData, VideoTypeEnum} from "@common/interface/entity/video";
+
 @Service()
 export class DoubanService {
 
@@ -123,11 +123,11 @@ export class DoubanService {
         }
     }
 
-    public async search(keyword: string, start = 0, count = 20, ts?: string): Promise<any> {
-        return this.invoke(this.urls.search, 'GET', { q: keyword, start, count, _ts: ts });
-    }
+    // public async search(keyword: string, start = 0, count = 20, ts?: string): Promise<any> {
+    //     return this.invoke(this.urls.search, 'GET', { q: keyword, start, count, _ts: ts });
+    // }
 
-    public async movieSearch(keyword: string, start = 0, count = 20, ts?: string): Promise<DobanMovieSearchResponse> {
+    public async movieSearch(keyword: string, start = 0, count = 2, ts?: string): Promise<DobanMovieSearchResponse> {
         return this.invoke(this.urls.movie_search, 'GET', { q: keyword, start, count, _ts: ts });
     }
 
@@ -135,11 +135,63 @@ export class DoubanService {
         return this.invoke(this.urls.movie_detail+id, 'GET');
     }
 
-    public async tvSearch(keyword: string, start = 0, count = 20, ts?: string): Promise<any> {
-        return this.invoke(this.urls.tv_search, 'GET', { q: keyword, start, count, _ts: ts });
-    }
+    // public async tvSearch(keyword: string, start = 0, count = 5, ts?: string): Promise<any> {
+    //     return this.invoke(this.urls.tv_search, 'GET', { q: keyword, start, count, _ts: ts });
+    // }
 
     public async tvDetail(id:string): Promise<any> {
         return this.invoke(this.urls.tv_detail+id, 'GET');
+    }
+
+    public async searchDetails(obj:DoubanVideo) {
+        switch(obj.video_type){
+            case VideoTypeEnum.Tv:
+                return await this.tvDetail(obj.douBan_target_id);
+            case VideoTypeEnum.Movie:
+                return await this.movieDetail(obj.douBan_target_id);
+        }
+    }
+
+    public async search(keyword):Promise<VideoData[]>{
+        let tmp:DoubanVideo[] = []
+        await this.movieSearch(keyword).then((res)=>{
+            for (const item of res.items) {
+                let doubanVideo = this.toDoubanVideo(item);
+                tmp.push(doubanVideo);
+            }
+        }).catch((err)=>{
+            console.log(err)
+            return []
+        })
+        let result:VideoData[] = []
+        for (let video of tmp) {
+            let detail =await this.searchDetails(video)
+            let obj:VideoData = {
+                backdropPicPath: "",
+                credits: [],
+                description: detail.intro,
+                link: [
+                {
+                    name: "Douban",
+                    url: detail.url
+                }
+            ],
+                metaData: {
+                // date: searchRes['first_air_date'],
+                imdbId: '',
+                    tvdbId: '',
+                    tmdbId: '',
+                    doubanId: detail.id,
+            },
+                path: "",
+                    posterPicPath: "",
+                seasons: [],
+                title: detail.title,
+                type: video.video_type
+            }
+            result.push(obj)
+        }
+
+        return result
     }
 }

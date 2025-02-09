@@ -29,7 +29,6 @@ export class TmdbService {
 
         SeasonRes.episodes.forEach(episode => {
             episodes.push({
-                id: 0,
                 // 集数
                 number: episode.episode_number + '',
 
@@ -93,7 +92,7 @@ export class TmdbService {
             backdropPicPath: "",
             credits: [],
             description: searchRes['overview'],
-            id: 0,
+
             link: [
                 {
                     name: 'tmdb',
@@ -101,7 +100,7 @@ export class TmdbService {
                 }
             ],
             metaData: {
-                date: searchRes['first_air_date'],
+                // date: searchRes['first_air_date'],
                 imdbId: '',
                 tvdbId: '',
                 tmdbId: searchRes['id'] + '',
