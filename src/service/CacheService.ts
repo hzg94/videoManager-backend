@@ -18,8 +18,6 @@ export class CacheService {
         this.tempDir = config.getConfig('tempDir') as string
     }
 
-
-
     /**
      * TODO: bug 无法使用axios流
      * @param stream 可读流

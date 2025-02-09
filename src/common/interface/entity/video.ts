@@ -19,7 +19,6 @@ export type CreditsType = {
 
 //元数据
 export type MetaDataType = {
-    // date: Date
     // 外部平台id
     imdbId: string
     tvdbId: string
@@ -30,7 +29,6 @@ export type MetaDataType = {
 
 
 export type VideoData = {
-
   title: string;
   type: VideoTypeEnum;
   /** 指向cacheId*/
@@ -47,7 +45,6 @@ export type VideoData = {
 };
 
 export type Seasons = {
-    id: number
 
     number: string
 
@@ -83,6 +80,5 @@ export interface MetaDataResult {
     title: string
 
 }
-
 
 

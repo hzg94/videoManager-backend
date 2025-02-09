@@ -62,10 +62,9 @@ export class TmdbService {
             const season = DetailRes['seasons'][i]
 
             seasonsData.push({
-                id: 0,
                 number: season['season_number'] + '',
                 title: season['name'],
-                year: season['air_date'],
+                year: season['air_date'] + '',
                 description: season['overview'],
                 // 总集数
                 total: season['episode_count'] + '',
@@ -92,7 +91,6 @@ export class TmdbService {
             backdropPicPath: "",
             credits: [],
             description: searchRes['overview'],
-
             link: [
                 {
                     name: 'tmdb',
@@ -100,7 +98,6 @@ export class TmdbService {
                 }
             ],
             metaData: {
-                // date: searchRes['first_air_date'],
                 imdbId: '',
                 tvdbId: '',
                 tmdbId: searchRes['id'] + '',

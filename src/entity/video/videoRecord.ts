@@ -1,8 +1,10 @@
-import {BaseEntity, Column, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn} from "typeorm";
+import {BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 import type {
-    CreditsType, MetaDataType,
+    CreditsType,
+    MetaDataType,
     Seasons,
-    VideoData, VideoLinkType,
+    VideoData,
+    VideoLinkType,
     VideoTypeEnum
 } from "@/common/interface/entity/video";
 import {SeasonsRecord} from "@/entity/video/SeasonsRecord";
@@ -42,7 +44,6 @@ export default class VideoRecord extends BaseEntity implements VideoData{
     @OneToMany(() => SeasonsRecord, (seasons) => seasons,{
         cascade: true
     })
-    @JoinColumn()
     seasons: Seasons[];
 
     @Column()
