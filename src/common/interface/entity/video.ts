@@ -13,7 +13,9 @@ export type VideoLinkType = {
 }
 
 export type CreditsType = {
+    // 名字
     name: string
+    //职位
     role: string
 }
 

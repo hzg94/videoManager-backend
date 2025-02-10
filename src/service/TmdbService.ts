@@ -64,7 +64,7 @@ export class TmdbService {
             seasonsData.push({
                 number: season['season_number'] + '',
                 title: season['name'],
-                year: season['air_date'] + '',
+                year: season['air_date'] ?? '',
                 description: season['overview'],
                 // 总集数
                 total: season['episode_count'] + '',

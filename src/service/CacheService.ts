@@ -3,10 +3,8 @@ import * as crypto from 'crypto';
 import VideoRecord from "@/entity/video/videoRecord";
 import {EpisodeRecord} from "@/entity/video/EpisodeRecord";
 import {ConfigService} from "@/service/ConfigService";
+import fs from "fs/promises";
 import * as path from "node:path";
-import fs from "fs";
-import { ReadStream } from "node:fs";
-import { PassThrough } from "node:stream";
 
 
 @Service()
@@ -18,40 +16,24 @@ export class CacheService {
         this.tempDir = config.getConfig('tempDir') as string
     }
 
+    async getCache(cacheId: string,type: string): Promise<ArrayBufferLike> {
+        const buffer = await fs.readFile(path.resolve(this.tempDir, `${cacheId}.${type}`))
+        return buffer.buffer
+    }
+
     /**
-     * TODO: bug 无法使用axios流
-     * @param stream 可读流
      * @return Promise<string> cacheId
+     * @param buf
      */
-    async saveCache(stream: ReadStream): Promise<string> {
-        //数据分发
-        const passThrough1 = new PassThrough();
-        const passThrough2 = new PassThrough();
-
-        stream.pipe(passThrough1);
-        stream.pipe(passThrough2);
-
-        const hash = crypto.createHash('md5');
-
+    async saveCache(buf: ArrayBuffer, type: string): Promise<string> {
         //计算md5
-        const md5 = await new Promise<string>((resolve, reject) => {
-            passThrough1.on('data', chunk => {
-                //@ts-ignore
-                hash.update(chunk, 'utf8');
-            });
-
-            passThrough1.on('end', () => {
-                resolve(hash.digest('hex'))
-            });
-
-            passThrough1.on('error', (err) => reject(err))
-        })
-
-        const writeStream = fs.createWriteStream(path.resolve(this.tempDir, md5))
+        const hash = crypto.createHash('md5');
+        const buffer = Buffer.from(buf);
+        hash.update(buffer);
+        const md5Hash = hash.digest('hex');
         //写入文件
-        passThrough2.pipe(writeStream)
-
-        return md5
+        await fs.writeFile(path.resolve(this.tempDir, `${md5Hash}.${type}`), buffer)
+        return md5Hash
     }
 
     async deleteCache(cacheId: string) {
