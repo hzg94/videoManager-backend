@@ -33,21 +33,36 @@ export type MetaDataType = {
 } & Record<string, string>
 
 
-export type VideoData = {
-  title: string;
-  type: VideoTypeEnum;
-  /** 指向cacheId*/
-  backdropPicPath: string;
-  /**指向cacheId */
-  posterPicPath: string;
+export type VideoData = TVShowData| MovieData;
 
-  description: string;
-  credits: CreditsType[];
-  path: string;
-  link: VideoLinkType[];
-  metaData?: MetaDataType;
-  seasons: Seasons[];
-};
+export type BaseVideo = {
+    title: string;
+    type: VideoTypeEnum;
+    /** 指向cacheId*/
+    backdropPicPath: string;
+    /**指向cacheId */
+    posterPicPath: string;
+    description: string;
+    credits: CreditsType[];
+    path: string;
+    link: VideoLinkType[];
+    metaData?: MetaDataType;
+    seasons: Seasons[];
+}
+
+export type MovieData = {
+    type: VideoTypeEnum.Movie
+} & BaseVideo
+
+export type TVShowData = {
+    type: VideoTypeEnum.Tv,
+    seasons: Seasons[];
+} & BaseVideo
+
+export type PersonData = {
+    type: VideoTypeEnum.Unknown
+} & BaseVideo
+
 
 export type Seasons = {
 

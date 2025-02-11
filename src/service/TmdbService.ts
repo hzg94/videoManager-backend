@@ -129,7 +129,7 @@ export class TmdbService {
 
     }
 
-    async getTVData(searchRes: MovieDB.Objects.TVShowWithMediaType) {
+    async getTVData(searchRes: MovieDB.Objects.TVShowWithMediaType): Promise<VideoData> {
         let seasonsData = await this.getSeasons(searchRes['id'])
 
         const posterPic = await this.getTmdbPic(searchRes.poster_path)
