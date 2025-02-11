@@ -135,6 +135,12 @@ export class DoubanService {
         return this.invoke(this.urls.movie_detail+id, 'GET');
     }
 
+    public async movieCelebrities(id:string): Promise<any> {
+        return this.invoke(this.urls.movie_celebrities.replace("%s",id), 'GET');
+    }
+    public async tvCelebrities(id: string): Promise<any> {
+        return this.invoke(this.urls.tv_celebrities.replace("%s",id), 'GET');
+    }
     // public async tvSearch(keyword: string, start = 0, count = 5, ts?: string): Promise<any> {
     //     return this.invoke(this.urls.tv_search, 'GET', { q: keyword, start, count, _ts: ts });
     // }
@@ -167,7 +173,6 @@ export class DoubanService {
         let result:VideoData[] = []
         for (let video of tmp) {
             let detail =await this.searchDetails(video)
-            console.log(detail)
             let obj:VideoData = {
                 backdropPicPath: "",
                 credits: [],
