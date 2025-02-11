@@ -1,14 +1,21 @@
-import {Container, Service} from "typedi";
+import {Container, Inject, Service} from "typedi";
 import {ConfigService} from "./ConfigService";
 import MovieDB from "node-themoviedb";
-import {EpisodeData, VideoData, VideoTypeEnum, Seasons} from "@common/interface/entity/video";
+import {EpisodeData, Seasons, VideoData, VideoTypeEnum} from "@common/interface/entity/video";
+import {CacheService} from "@/service/CacheService";
+import axios from "axios";
 
 
 @Service()
 export class TmdbService {
     configService: ConfigService
 
+    @Inject()
+    cacheService: CacheService
+
     client: MovieDB
+
+    basePicUrl = 'https://image.tmdb.org/t/p/original/'
 
     constructor() {
         this.configService = Container.get(ConfigService)
@@ -17,17 +24,41 @@ export class TmdbService {
         })
     }
 
-    async getEpisodes(id: number, season_number: number){
-        let episodes:EpisodeData[] = []
+    async getTmdbPic(url: string | null) {
+        if (!url) {
+            return ''
+        }
+
+        const picUrl = this.basePicUrl + url
+
+        const picType = picUrl.split('.').pop() ?? ''
+
+        const pic = await axios.get(picUrl,
+            {
+                responseType: 'arraybuffer'
+            })
+
+        /*      if (pic.status !== 200) {
+                  throw new Error('获取图片失败')
+              }*/
+
+        return await this.cacheService.saveCache(pic.data, picType)
+    }
+
+    async getEpisodes(id: number, season_number: number) {
+        let episodes: EpisodeData[] = []
 
         let SeasonRes = (await this.client.tv.season.getDetails({
-            pathParameters: {
-                tv_id: id,
-                season_number: season_number
-            }}
+                pathParameters: {
+                    tv_id: id,
+                    season_number: season_number
+                }
+            }
         ))['data']
 
-        SeasonRes.episodes.forEach(episode => {
+        for (const episode of SeasonRes.episodes) {
+            const backdropPic = await this.getTmdbPic(episode.still_path)
+
             episodes.push({
                 // 集数
                 number: episode.episode_number + '',
@@ -39,14 +70,15 @@ export class TmdbService {
                 // 时长 unit 分钟
                 time: episode['runtime'],
 
-                backdropPicPath: '',
+                backdropPicPath: backdropPic,
             })
-        })
+        }
+
         return episodes
     }
 
 
-    async getSeasons(id: number){
+    async getSeasons(id: number) {
 
         let seasonsData: Seasons[] = []
 
@@ -56,16 +88,21 @@ export class TmdbService {
             }
         }))['data']
 
+
         for (let i = 0; i < DetailRes['seasons'].length; i++) {
             let episodes = await this.getEpisodes(id, DetailRes['seasons'][i]['season_number'])
 
             const season = DetailRes['seasons'][i]
+
+            const posterPic = await this.getTmdbPic(season.poster_path)
 
             seasonsData.push({
                 number: season['season_number'] + '',
                 title: season['name'],
                 year: season['air_date'] ?? '',
                 description: season['overview'],
+
+                posterPicPath: posterPic,
                 // 总集数
                 total: season['episode_count'] + '',
                 episodes: episodes
@@ -83,12 +120,25 @@ export class TmdbService {
             }
         }))['data']['results'][0]
 
+        switch (searchRes['media_type']) {
+            case 'tv':
+                return await this.getTVData(searchRes)
+            default:
+                throw new Error('暂不支持该类型')
+        }
+
+    }
+
+    async getTVData(searchRes: MovieDB.Objects.TVShowWithMediaType) {
         let seasonsData = await this.getSeasons(searchRes['id'])
 
-        console.log(searchRes)
+        const posterPic = await this.getTmdbPic(searchRes.poster_path)
+        const backdropPic = await this.getTmdbPic(searchRes.backdrop_path)
+
+
 
         return {
-            backdropPicPath: "",
+            backdropPicPath: backdropPic,
             credits: [],
             description: searchRes['overview'],
             link: [
@@ -104,12 +154,11 @@ export class TmdbService {
                 doubanId: ''
             },
             path: "",
-            posterPicPath: "",
+            posterPicPath: posterPic,
             seasons: seasonsData,
             title: searchRes['name'],
             type: VideoTypeEnum.Tv
         }
-
     }
 
 }

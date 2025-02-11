@@ -5,6 +5,7 @@ import {EpisodeRecord} from "@/entity/video/EpisodeRecord";
 import {ConfigService} from "@/service/ConfigService";
 import fs from "fs/promises";
 import * as path from "node:path";
+import {CacheRecord} from "@/entity/cache/CacheRecord";
 
 
 @Service()
@@ -16,14 +17,25 @@ export class CacheService {
         this.tempDir = config.getConfig('tempDir') as string
     }
 
-    async getCache(cacheId: string,type: string): Promise<ArrayBufferLike> {
-        const buffer = await fs.readFile(path.resolve(this.tempDir, `${cacheId}.${type}`))
+    async getCache(cacheId: string): Promise<ArrayBufferLike | null> {
+        const cache = await CacheRecord.findOne({
+            where: {
+                cacheId: cacheId,
+            }
+        })
+
+        if (cache == null) {
+            throw new Error('No Found Cache')
+        }
+
+        const buffer = await fs.readFile(path.resolve(this.tempDir, `${cacheId}.${cache?.type}`))
         return buffer.buffer
     }
 
     /**
      * @return Promise<string> cacheId
-     * @param buf
+     * @param buf 文件内容 二进制
+     * @param type 文件类型
      */
     async saveCache(buf: ArrayBuffer, type: string): Promise<string> {
         //计算md5
@@ -31,13 +43,37 @@ export class CacheService {
         const buffer = Buffer.from(buf);
         hash.update(buffer);
         const md5Hash = hash.digest('hex');
-        //写入文件
-        await fs.writeFile(path.resolve(this.tempDir, `${md5Hash}.${type}`), buffer)
+        //check cache
+        let cache = await CacheRecord.findOne({
+            where: {
+                cacheId: md5Hash
+            }
+        })
+        if(cache == null){
+            await CacheRecord.insert({
+                cacheId: md5Hash,
+                type: type
+            })
+            //写入文件
+            await fs.writeFile(path.resolve(this.tempDir, `${md5Hash}.${type}`), buffer)
+        }
         return md5Hash
     }
 
-    async deleteCache(cacheId: string) {
-
+    //只移除缓存
+    async deleteCache(cacheId: string)  {
+        let cache = await CacheRecord.findOne({
+            where: {
+                cacheId: cacheId
+            }
+        })
+        if(cache == null){
+            throw new Error('No Found Cache')
+        }
+        await fs.rm(path.resolve(this.tempDir, `${cacheId}.${cache.type}`))
+        await CacheRecord.delete({
+            cacheId: cacheId
+        })
     }
 
     /**
@@ -45,18 +81,16 @@ export class CacheService {
      */
     findCacheForAll(cacheId: string) {
 
-
-
     }
 
     /**
      * 查找有效所有缓存
      */
-    async findCacheForUsed(){
+    async findCacheForUsed() {
         const cacheSet = new Set<string>()
 
         const video = await VideoRecord.find({
-            select: ['backdropPicPath','posterPicPath'],
+            select: ['backdropPicPath', 'posterPicPath'],
         })
 
         const second = await EpisodeRecord.find({
@@ -76,7 +110,7 @@ export class CacheService {
     }
 
     async cleanCache() {
-
+        return ""
     }
 
 

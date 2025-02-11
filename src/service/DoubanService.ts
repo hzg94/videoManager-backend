@@ -2,7 +2,7 @@ import {Service} from "typedi";
 import {ConfigService} from "./ConfigService";
 import * as crypto from 'crypto';
 import * as querystring from 'querystring';
-import {Request} from '../common/request';
+import {Request} from '@common/request';
 import {DobanMovieSearchResponse, DoubanVideo} from "@common/interface/service/videoResponse";
 import {VideoData, VideoTypeEnum} from "@common/interface/entity/video";
 

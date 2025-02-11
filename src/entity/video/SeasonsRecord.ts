@@ -28,4 +28,6 @@ export class SeasonsRecord extends BaseEntity implements Seasons {
 
     @ManyToOne(() => VideoRecord, video => video.seasons)
     video: VideoData
+    @Column()
+    posterPicPath: string;
 }

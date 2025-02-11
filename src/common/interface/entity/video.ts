@@ -12,11 +12,14 @@ export type VideoLinkType = {
     url: string
 }
 
+// 创作者
 export type CreditsType = {
     // 名字
     name: string
     //职位
     role: string
+    // 图片 指向cacheId
+    pic: string
 }
 
 //元数据
@@ -57,6 +60,9 @@ export type Seasons = {
     description: string
     // 总集数
     total: string
+
+    /**指向cacheId */
+    posterPicPath: string;
 
     episodes: EpisodeData[]
 }
