@@ -181,7 +181,14 @@ export class DoubanService {
         let credits:CreditsType[] = []
         for (let video of tmp) {
             let detail =await this.searchDetails(video)
-            var celebrities = await this.searchCelebrities(video);
+            let celebrities = await this.searchCelebrities(video);
+            for (let actors of celebrities.actors) {
+                credits.push({
+                    name: actors.name,
+                    pic: actors.avatar.normal,
+                    role: actors.character
+                });
+            }
             for (let director of celebrities.directors) {
                 credits.push({
                     name: director.name,
@@ -189,6 +196,7 @@ export class DoubanService {
                     role: director.character
                 });
             }
+
             let obj:VideoData = {
                 backdropPicPath: "",
                 credits: credits,
