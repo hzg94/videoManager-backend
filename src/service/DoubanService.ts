@@ -4,7 +4,7 @@ import * as crypto from 'crypto';
 import * as querystring from 'querystring';
 import {Request} from '@common/request';
 import {DobanMovieSearchResponse, DoubanVideo} from "@common/interface/service/videoResponse";
-import {VideoData, VideoTypeEnum} from "@common/interface/entity/video";
+import {CreditsType, VideoData, VideoTypeEnum} from "@common/interface/entity/video";
 
 @Service()
 export class DoubanService {
@@ -157,7 +157,14 @@ export class DoubanService {
                 return await this.movieDetail(obj.douBan_target_id);
         }
     }
-
+    public async searchCelebrities(obj:DoubanVideo) {
+        switch(obj.video_type){
+            case VideoTypeEnum.Tv:
+                return await this.tvCelebrities(obj.douBan_target_id);
+            case VideoTypeEnum.Movie:
+                return await this.movieCelebrities(obj.douBan_target_id);
+        }
+    }
     public async search(keyword):Promise<VideoData[]>{
         let tmp:DoubanVideo[] = []
         await this.movieSearch(keyword).then((res)=>{
@@ -171,28 +178,36 @@ export class DoubanService {
             return []
         })
         let result:VideoData[] = []
+        let credits:CreditsType[] = []
         for (let video of tmp) {
             let detail =await this.searchDetails(video)
+            var celebrities = await this.searchCelebrities(video);
+            for (let director of celebrities.directors) {
+                credits.push({
+                    name: director.name,
+                    pic: director.avatar.normal,
+                    role: director.character
+                });
+            }
             let obj:VideoData = {
                 backdropPicPath: "",
-                credits: [],
+                credits: credits,
                 description: detail.intro,
-                link: [
-                {
+                link: [{
                     name: "Douban",
                     url: detail.url
-                }
-            ],
+                }],
                 metaData: {
-                imdbId: '',
+                    imdbId: '',
                     tvdbId: '',
                     tmdbId: '',
                     doubanId: detail.id,
-            },
+                },
                 path: "",
                 posterPicPath: "",
                 seasons: [],
                 title: detail.title,
+                // @ts-ignore
                 type: video.video_type
             }
             result.push(obj)
